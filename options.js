@@ -1,7 +1,7 @@
 /*global chrome, checkTabCount */
 
 window.onload = function(){
-  localStorage.tabLimit = localStorage.tabLimit || 10;
+  localStorage.tabLimit = localStorage.tabLimit || 12;
   var tabLimitEl = document.getElementById('tabLimit');
   tabLimitEl.value = localStorage.tabLimit;
   tabLimitEl.addEventListener('change', function(){

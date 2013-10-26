@@ -6,7 +6,7 @@ var warnTabs;
 var checking;
 
 function setTabLimits() {
-  maxTabs = parseInt(localStorage.tabLimit = localStorage.tabLimit || 10, 10);
+  maxTabs = parseInt(localStorage.tabLimit = localStorage.tabLimit || 12, 10);
 
   // start colorizing badge when 40% tabs left until max
   buffer = parseInt((maxTabs / 100) * 40, 10);
@@ -45,7 +45,7 @@ function checkTabCount() {
 
     var unPinnedTabs = [];
     var pinnedTabs = [];
-    var i, il;
+    var i, il, j;
 
     for (i = 0, il = tabs.length; i < il; i++) {
       if(tabs[i].pinned){
@@ -56,6 +56,7 @@ function checkTabCount() {
     }
 
     var unPinnedTabsCount = unPinnedTabs.length;
+    var pinnedTabsCount = pinnedTabs.length;
 
     // remove a tab
     if(unPinnedTabsCount > maxTabs) {
@@ -66,17 +67,25 @@ function checkTabCount() {
       }, 400);
 
       // try to remove a tab
+      loopTabs:
       for (i = 0, il = unPinnedTabs.length; i < il; i++) {
         // if the current tab is active, don't attempt to close it
         // use case: undo closing of a tab from tabalot
         if(unPinnedTabs[i].active){
           continue;
         }
+
         // don't close a new tab that was opened from another tab
         // use case: cmd click a link that creates a tab beyond the max count
         if(unPinnedTabs[i].openerTabId === unPinnedTabs[i].id){
           continue;
         }
+        for (j = 0; j < pinnedTabsCount; j++) {
+          if(unPinnedTabs[i].openerTabId === pinnedTabs[j].id) {
+            continue loopTabs;
+          }
+        }
+
         // close the leftmost tab that isn't active or the instigator of the last opened tab
         --unPinnedTabsCount;
         /*jshint loopfunc: true */
