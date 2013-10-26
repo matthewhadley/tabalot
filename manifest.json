@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Tabalot",
+  "version": "0.0.1",
+  "description": "Limit the maximum number of open tabs",
+  "permissions": [
+    "tabs"
+  ],
+  "icons": {
+     "64": "icon.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_title": "Tabalot",
+    "default_icon": "icon.png",
+    "default_popup": "options.html"
+  }
+}
