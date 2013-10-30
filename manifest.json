@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Tabalot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Limit the maximum number of open tabs",
   "permissions": [
     "tabs"
