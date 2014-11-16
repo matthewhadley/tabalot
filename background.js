@@ -1,5 +1,7 @@
 /*global chrome */
 
+'use strict';
+
 var maxTabs;
 var buffer;
 var warnTabs;
@@ -13,7 +15,7 @@ function setTabLimits() {
   warnTabs = maxTabs - buffer;
 }
 setTabLimits();
-chrome.browserAction.setTitle({title:'Tabalot: ' + maxTabs + ' tab limit'});
+chrome.browserAction.setTitle({title: 'Tabalot: ' + maxTabs + ' tab limit'});
 
 function updateBadge(val, flash){
   if(flash > 0){

@@ -1,5 +1,7 @@
 /*global chrome, checkTabCount */
 
+'use strict';
+
 window.onload = function(){
   localStorage.tabLimit = localStorage.tabLimit || 12;
   var tabLimitEl = document.getElementById('tabLimit');
@@ -7,7 +9,7 @@ window.onload = function(){
   tabLimitEl.addEventListener('change', function(){
     var maxTabs = parseInt(tabLimitEl.value, 10);
     localStorage.tabLimit = maxTabs;
-    chrome.browserAction.setTitle({title:'Tabalot: ' + maxTabs + ' tab limit'});
+    chrome.browserAction.setTitle({title: 'Tabalot: ' + maxTabs + ' tab limit'});
     chrome.windows.getAll(function(windows){
       windows.forEach(function(win){
         checkTabCount(win.id);
