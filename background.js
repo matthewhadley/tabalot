@@ -63,9 +63,9 @@ function checkTabCount() {
     // remove a tab
     if(unPinnedTabsCount > maxTabs) {
       // flash the icon red
-      chrome.browserAction.setIcon({path: 'iconAlert.png'});
+      chrome.browserAction.setIcon({path: 'icon-alert-38.png'});
       setTimeout(function(){
-        chrome.browserAction.setIcon({path: 'icon.png'});
+        chrome.browserAction.setIcon({path: 'icon-38.png'});
       }, 400);
 
       // try to remove a tab
