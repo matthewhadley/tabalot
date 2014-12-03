@@ -1,4 +1,4 @@
-# Tabalot
+# [![tabalot](https://raw.githubusercontent.com/diffsky/tabalot/master/icon-38.png)](https://github.com/diffsky/tabalot) Tabalot
 
 Google Chrome Browser Extension to keep a limit on your open tabs.
 
