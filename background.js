@@ -103,16 +103,14 @@ function checkTabCount() {
           return false;
         }
 
-        tab.timestamp = history[tab.id];
+        tab.timestamp = history[tab.id] || Date.now();
         return true;
       }).sort(function(a, b) {
         return a.timestamp - b.timestamp;
       });
 
-      chrome.tabs.remove(candidates[0].id, function() {
-        --unPinnedTabsCount;
-      });
-
+      --unPinnedTabsCount;
+      chrome.tabs.remove(candidates[0].id);
     }
     updateBadge(unPinnedTabsCount);
 
@@ -152,7 +150,6 @@ chrome.tabs.onCreated.addListener(function(tab) {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // console.log('tab onUpdated');
   addHistory(tab);
-  checkTabCount();
 });
 
 chrome.tabs.onMoved.addListener(function(tabId) {
