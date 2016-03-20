@@ -103,7 +103,7 @@ function checkTabCount() {
           return false;
         }
 
-        tab.timestamp = history[tab.id] || Date.now();
+        tab.timestamp = history[tab.id];
         return true;
       }).sort(function(a, b) {
         return a.timestamp - b.timestamp;
