@@ -106,9 +106,8 @@ function checkTabCount() {
         tab.timestamp = history[tab.id];
         return true;
       }).sort(function(a, b) {
-        return a.timestamp - b.timestamp;
+        return (a.timestamp || 0) - (b.timestamp || 0);
       });
-
       --unPinnedTabsCount;
       chrome.tabs.remove(candidates[0].id);
     }
