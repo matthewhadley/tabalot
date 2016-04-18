@@ -14,3 +14,6 @@ If you end up with too many tabs open, all reduced to a tiny size, this extensio
 
 Note that the tab badge count shows tabs in the current open window only (which seems to be a limitation on chrome) but will correctly update as you switch windows.
 
+***PRIVACY POLICY***
+
+Tabalot does not handle personal or sensitive user data.
