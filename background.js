@@ -1,7 +1,8 @@
 'use strict';
 
-(function init() {
-  var maxTabs;
+window.TABALOT = (function init() {
+  var defaultTabLimit = 25;
+  var tabLimit;
   var buffer;
   var warnTabs;
   var checking;
@@ -36,19 +37,17 @@
     };
   }
 
-  localStorage.tabLimit = localStorage.tabLimit || 25;
-
-  function setTabLimits() {
-    log('tab limit:', localStorage.tabLimit);
-    maxTabs = parseInt(localStorage.tabLimit, 10);
+  function setTabLimit(limit) {
+    localStorage.tabLimit = tabLimit = parseInt(limit || localStorage.tabLimit || defaultTabLimit, 10);
+    log('tab limit:', tabLimit);
 
     // start colorizing badge when 40% tabs left until max
-    buffer = parseInt((maxTabs / 100) * 40, 10);
-    warnTabs = maxTabs - buffer;
+    buffer = parseInt((tabLimit / 100) * 40, 10);
+    warnTabs = tabLimit - buffer;
   }
-  setTabLimits();
+  setTabLimit();
   chrome.browserAction.setTitle({
-    title: 'Tabalot: ' + maxTabs + ' tab limit'
+    title: 'Tabalot: ' + tabLimit + ' tab limit'
   });
 
   function updateBadge(val, flash) {
@@ -90,8 +89,9 @@
     if (checking) {
       return;
     }
+
     checking = true;
-    setTabLimits();
+    setTabLimit();
 
     chrome.tabs.query({
       windowId: chrome.windows.WINDOW_ID_CURRENT
@@ -115,7 +115,7 @@
       var unPinnedTabsCount = unPinnedTabs.length;
 
       // remove a tab
-      if (unPinnedTabsCount > maxTabs) {
+      if (unPinnedTabsCount > tabLimit) {
         // flash the icon red
         chrome.browserAction.setIcon({
           path: 'icon-alert-38.png'
@@ -145,7 +145,10 @@
         });
         --unPinnedTabsCount;
         log('remove tab:', candidates[0].id);
-        chrome.tabs.remove(candidates[0].id);
+
+        chrome.tabs.remove(candidates[0].id, function() {
+          log('removed tab:', candidates[0].id);
+        });
       }
       updateBadge(unPinnedTabsCount);
 
@@ -159,7 +162,7 @@
         chrome.browserAction.setBadgeBackgroundColor({
           color: [panic, 0, 0, 255]
         });
-        if (unPinnedTabsCount === maxTabs) {
+        if (unPinnedTabsCount === tabLimit) {
           setTimeout(function() {
             updateBadge(unPinnedTabsCount, 4);
           }, 300);
@@ -177,7 +180,7 @@
   }
 
   chrome.tabs.onCreated.addListener(function(tab) {
-    log(tab, 'tab: onCreated');
+    log(tab.id, 'tab: onCreated');
     addHistory(tab);
     checkTabCount();
   });
@@ -236,5 +239,10 @@
       addHistory(tab.id);
     });
   });
+
+  return {
+    checkTabCount: checkTabCount,
+    setTabLimit: setTabLimit
+  };
 
 })();
