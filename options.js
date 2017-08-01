@@ -3,7 +3,6 @@
 'use strict';
 
 window.onload = function() {
-  localStorage.tabLimit = localStorage.tabLimit || 25;
   var tabLimitEl = document.getElementById('tabLimit');
   tabLimitEl.value = localStorage.tabLimit;
   tabLimitEl.addEventListener('change', function() {

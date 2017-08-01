@@ -36,8 +36,11 @@
     };
   }
 
+  localStorage.tabLimit = localStorage.tabLimit || 25;
+
   function setTabLimits() {
-    maxTabs = parseInt(localStorage.tabLimit = localStorage.tabLimit || 12, 10);
+    log('tab limit:', localStorage.tabLimit);
+    maxTabs = parseInt(localStorage.tabLimit, 10);
 
     // start colorizing badge when 40% tabs left until max
     buffer = parseInt((maxTabs / 100) * 40, 10);
@@ -141,6 +144,7 @@
           return (a.timestamp || 0) - (b.timestamp || 0);
         });
         --unPinnedTabsCount;
+        log('remove tab:', candidates[0].id);
         chrome.tabs.remove(candidates[0].id);
       }
       updateBadge(unPinnedTabsCount);
@@ -173,56 +177,56 @@
   }
 
   chrome.tabs.onCreated.addListener(function(tab) {
-    log(tab, 'tab onCreated');
+    log(tab, 'tab: onCreated');
     addHistory(tab);
     checkTabCount();
   });
 
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    log(tabId, 'tab onUpdated');
+    log(tabId, 'tab: onUpdated');
     addHistory(tab);
   });
 
   chrome.tabs.onMoved.addListener(function(tabId) {
-    log(tabId, 'tab onMoved');
+    log(tabId, 'tab: onMoved');
     addHistory(tabId);
   });
 
   chrome.tabs.onActivated.addListener(function(activeInfo) {
-    log(activeInfo.tabId, 'tab onActivated');
+    log(activeInfo.tabId, 'tab: onActivated');
     addHistory(activeInfo.tabId);
   });
 
   chrome.tabs.onRemoved.addListener(function(tabId) {
-    log(tabId, 'tab onRemoved');
+    log(tabId, 'tab: onRemoved');
     delHistory(tabId);
     checkTabCount();
   });
 
   chrome.tabs.onDetached.addListener(function(tabId) {
-    log(tabId, 'tab onDetached');
+    log(tabId, 'tab: onDetached');
     delHistory(tabId);
     checkTabCount();
   });
 
   chrome.tabs.onAttached.addListener(function(tabId) {
-    log(tabId, 'tab onAttached');
+    log(tabId, 'tab: onAttached');
     addHistory(tabId);
     checkTabCount();
   });
 
   chrome.windows.getLastFocused(function() {
-    log('window getLastFocussed');
+    log('window: getLastFocussed');
     checkTabCount();
   });
 
   chrome.windows.onCreated.addListener(function() {
-    log('window onCreated');
+    log('window: onCreated');
     checkTabCount();
   });
 
   chrome.windows.onFocusChanged.addListener(function() {
-    log('window onFocusChanged');
+    log('window: onFocusChanged');
     checkTabCount();
   });
 
