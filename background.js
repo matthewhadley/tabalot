@@ -188,6 +188,10 @@ window.TABALOT = (function init() {
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     log(tabId, 'tab: onUpdated');
     addHistory(tab);
+    // catch (un)pin events
+    if (changeInfo.hasOwnProperty('pinned')) {
+      checkTabCount();
+    }
   });
 
   chrome.tabs.onMoved.addListener(function(tabId) {
