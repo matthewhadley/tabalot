@@ -6,6 +6,7 @@ window.TABALOT = (function init() {
   var buffer;
   var warnTabs;
   var checking;
+  // note history is cross-window
   var history = {};
 
   var debug = !('update_url' in chrome.runtime.getManifest());
@@ -22,17 +23,19 @@ window.TABALOT = (function init() {
       Object.keys(history).forEach(function(tab) {
         list.push({
           tab: tab,
-          title: tab.title,
           timestamp: history[tab]
         });
       });
 
       list = list.sort(function(a, b) {
         return (a.timestamp || 0) - (b.timestamp || 0);
-      }).map(function(tab) {
+      })
+
+      list = list.map(function(tab) {
         return tab.tab;
       });
 
+      // log(history);
       log(list);
     };
   }
@@ -71,17 +74,21 @@ window.TABALOT = (function init() {
     }
   }
 
-  function addHistory(tab) {
+  function addHistory(tab, logEvent) {
     if (tab.pinned) {
       return;
     }
     history[(tab.id || tab)] = Date.now();
-    logHistory();
+    if (logEvent !== false) {
+      logHistory();
+    }
   }
 
-  function delHistory(tabId) {
+  function delHistory(tabId, logEvent) {
     delete history[tabId];
-    logHistory();
+    if (logEvent !== false) {
+      logHistory();
+    }
   }
 
   function checkTabCount() {
@@ -243,6 +250,19 @@ window.TABALOT = (function init() {
       addHistory(tab.id);
     });
   });
+
+  // periodically make sure the active tab has a current timestamp
+  // as there is no event for when a tab is no longer active
+  window.setInterval(function() {
+    chrome.tabs.query({
+      windowId: chrome.windows.WINDOW_ID_CURRENT,
+      active: true
+    }, function(tabs) {
+        tabs.forEach(function(tab){
+          addHistory(tab.id, false)
+        });
+    });
+  }, 500);
 
   return {
     checkTabCount: checkTabCount,
